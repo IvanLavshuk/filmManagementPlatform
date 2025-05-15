@@ -1,0 +1,33 @@
+version: '3.8'
+#docker-compose down -v  # Удаляет старые контейнеры и тома
+#docker-compose up -d    # Запускает с новой конфигурацией
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: film-platform-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ROOT
+      MYSQL_DATABASE: shop
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  market-app:
+    build: .
+    container_name: market-app
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/videolibrary
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ROOT
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8080
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
