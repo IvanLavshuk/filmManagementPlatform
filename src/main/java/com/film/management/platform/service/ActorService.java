@@ -5,6 +5,7 @@ import com.film.management.platform.dto.Response.ResponseActorDto;
 import com.film.management.platform.entity.Actor;
 import com.film.management.platform.mapper.ActorMapper;
 import com.film.management.platform.repository.ActorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class ActorService {
-    private ActorRepository actorRepository;
-    private ActorMapper actorMapper;
+    private final ActorRepository actorRepository;
+    private final ActorMapper actorMapper;
 
     @Transactional
     public Actor create(CreateActorDto actorDto) {
@@ -48,7 +48,7 @@ public class ActorService {
         return actorRepository
                 .findById(id)
                 .map(actorMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Actor with this id is not exist"));
     }
 
     @Transactional(readOnly = true)
@@ -94,14 +94,14 @@ public class ActorService {
         String surname = actorDto.getSurname();
         Actor actor = actorRepository
                 .findByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(name, surname)
-                .orElseThrow(() -> new NoSuchElementException("Actor not found with name: " + name + " " + surname));
+                .orElseThrow(() -> new EntityNotFoundException("Actor with this name and surname is not exist"));
         return actorMapper.toDto(actorRepository.save(actor));
     }
     @Transactional
     public void deleteById(Integer id){
         Optional<Actor> optional = actorRepository.findById(id);
         if(optional.isEmpty()){
-            throw new NoSuchElementException("actor not found with id: " + id);
+            throw new EntityNotFoundException("actor not found with id: " + id);
         }
         actorRepository.deleteById(id);
     }

@@ -3,11 +3,10 @@ package com.film.management.platform.service;
 import com.film.management.platform.dto.Request.CreateMovieDto;
 import com.film.management.platform.dto.Response.ResponseMovieDto;
 import com.film.management.platform.entity.Movie;
-import com.film.management.platform.entity.Review;
 import com.film.management.platform.mapper.MovieActorMapper;
 import com.film.management.platform.mapper.MovieMapper;
 import com.film.management.platform.repository.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +18,14 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class MovieService {
-    private MovieRepository movieRepository;
-    private ActorRepository actorRepository;
-    private DirectorRepository directorRepository;
-    private GenreRepository genreRepository;
-    private ReviewRepository reviewRepository;
-    private MovieMapper movieMapper;
-    private MovieActorMapper movieActorMapper;
+    private final MovieRepository movieRepository;
+    private final ActorRepository actorRepository;
+    private final DirectorRepository directorRepository;
+    private final GenreRepository genreRepository;
+    private final ReviewRepository reviewRepository;
+    private final MovieMapper movieMapper;
+    private final MovieActorMapper movieActorMapper;
 
     public Double getAverageRating(Integer movieId) {
         return reviewRepository.findAverageRatingByMovieId(movieId);
@@ -49,7 +47,7 @@ public class MovieService {
     public ResponseMovieDto update(CreateMovieDto movieDto) {
         Optional<Movie> optional = movieRepository.findByTitleAndReleaseDate(movieDto.getTitle(), movieDto.getReleaseDate());
         if (optional.isEmpty()) {
-            throw new IllegalStateException("Movie with this title and releaseDate does not exists" +
+            throw new EntityNotFoundException("Movie with this title and releaseDate does not exists" +
                     "(" + movieDto.getTitle() + movieDto.getReleaseDate() + ")");
         }
         Movie movie = movieRepository.findByTitleAndReleaseDate(movieDto.getTitle(), movieDto.getReleaseDate()).orElseThrow();
@@ -60,7 +58,7 @@ public class MovieService {
     public void deleteById(Integer id) {
         Optional<Movie> optional = movieRepository.findById(id);
         if (optional.isEmpty()) {
-            throw new IllegalStateException("Movie with this id does not exists");
+            throw new EntityNotFoundException("Movie with this id does not exists");
         }
         movieRepository.deleteById(id);
     }
@@ -69,7 +67,7 @@ public class MovieService {
     public void deleteByTitleAndDate(String title, LocalDate releaseDate) {
         Optional<Movie> optional = movieRepository.findByTitleAndReleaseDate(title, releaseDate);
         if (optional.isEmpty()) {
-            throw new IllegalStateException("Movie with this id does not exists");
+            throw new EntityNotFoundException("Movie with this id does not exists");
         }
         movieRepository.deleteByTitleAndReleaseDate(title, releaseDate);
     }
@@ -97,7 +95,7 @@ public class MovieService {
         return movieRepository
                 .findById(id)
                 .map(movie -> movieMapper.toDto(movie))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("Movie with this id does not exists"));
     }
 
     @Transactional(readOnly = true)
@@ -146,7 +144,7 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseMovieDto> findByDirector(LocalDate start, LocalDate end) {
+    public List<ResponseMovieDto> findByDateBetween(LocalDate start, LocalDate end) {
         return movieRepository
                 .findByReleaseDateBetween(start, end)
                 .stream()
@@ -162,6 +160,7 @@ public class MovieService {
                 .map(movie -> movieMapper.toDto(movie))
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public List<ResponseMovieDto> findAllByOrderByDateAsc() {
         return movieRepository
@@ -172,7 +171,7 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseMovieDto> findAllOrderByAverageRatingDesc(){
+    public List<ResponseMovieDto> findAllOrderByAverageRatingDesc() {
         return movieRepository
                 .findAllOrderByAverageRatingDesc()
                 .stream()

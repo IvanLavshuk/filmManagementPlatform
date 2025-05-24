@@ -5,6 +5,7 @@ import com.film.management.platform.dto.Response.ResponseGenreDto;
 import com.film.management.platform.entity.Genre;
 import com.film.management.platform.mapper.GenreMapper;
 import com.film.management.platform.repository.GenreRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,12 +47,12 @@ public class GenreService {
     @Transactional(readOnly = true)
     public ResponseGenreDto findByName(String name) {
         if (!genreRepository.existsByName(name)) {
-            throw new NoSuchElementException("Genre not found with name: " + name);
+            throw new EntityNotFoundException("genre not found with name: " + name);
         }
         return genreRepository
                 .findByNameIgnoreCase(name)
                 .map(genreMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("genre not found with name: " + name));
     }
 
     @Transactional(readOnly = true)
@@ -59,14 +60,14 @@ public class GenreService {
         return genreRepository
                 .findById(id)
                 .map(genreMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("genre not found with id: " + id));
     }
 
     @Transactional
     public ResponseGenreDto update(CreateGenreDto genreDto) {
         String name = genreDto.getName();
         Genre genre = genreRepository.findByNameIgnoreCase(name)
-                .orElseThrow(() -> new NoSuchElementException("Genre not found with name: " + name));
+                .orElseThrow(() -> new EntityNotFoundException("genre not found with name: " + name));
 
         if (!genre.getName().equalsIgnoreCase(genreDto.getName())
                 && genreRepository.existsByName(genreDto.getName())) {
@@ -83,5 +84,14 @@ public class GenreService {
             throw new NoSuchElementException("Genre not found with name: " + name);
         }
         genreRepository.deleteByNameIgnoreCase(name);
+    }
+
+    @Transactional
+    public void deleteById(Integer id) {
+        Optional<Genre> optional = genreRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new EntityNotFoundException("genre not found with id: " + id);
+        }
+        genreRepository.deleteById(id);
     }
 }

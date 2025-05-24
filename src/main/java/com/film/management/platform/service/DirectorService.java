@@ -5,6 +5,7 @@ import com.film.management.platform.dto.Response.ResponseDirectorDto;
 import com.film.management.platform.entity.Director;
 import com.film.management.platform.mapper.DirectorMapper;
 import com.film.management.platform.repository.DirectorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class DirectorService {
-    private DirectorRepository directorRepository;
-    private DirectorMapper directorMapper;
+    private final DirectorRepository directorRepository;
+    private final DirectorMapper directorMapper;
 
     @Transactional
     public Director create(CreateDirectorDto directorDto) {
@@ -48,7 +47,7 @@ public class DirectorService {
         return directorRepository
                 .findById(id)
                 .map(directorMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(()->new EntityNotFoundException("Director with this id is not exist"));
     }
 
     @Transactional(readOnly = true)
@@ -85,7 +84,7 @@ public class DirectorService {
         String surname = directorDto.getSurname();
         Director director = directorRepository
                 .findByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(name, surname)
-                .orElseThrow(() -> new NoSuchElementException("Actor not found with name: " + name + " " + surname));
+                .orElseThrow(()->new EntityNotFoundException("Director with this name and surname is not exist"));
         return directorMapper.toDto(directorRepository.save(director));
     }
 
@@ -93,7 +92,7 @@ public class DirectorService {
     public void deleteById(Integer id) {
         Optional<Director> optional = directorRepository.findById(id);
         if (optional.isEmpty()) {
-            throw new NoSuchElementException("director not found with id: " + id);
+            throw new EntityNotFoundException("director not found with id: " + id);
         }
         directorRepository.deleteById(id);
     }

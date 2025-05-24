@@ -8,24 +8,22 @@ import com.film.management.platform.mapper.ReviewMapper;
 import com.film.management.platform.repository.MovieRepository;
 import com.film.management.platform.repository.ReviewRepository;
 import com.film.management.platform.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class ReviewService {
-    private ReviewRepository reviewRepository;
-    private UserRepository userRepository;
-    private MovieRepository movieRepository;
-    private ReviewMapper reviewMapper;
+    private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
+    private final MovieRepository movieRepository;
+    private final ReviewMapper reviewMapper;
 
     @Transactional
     public Review create(CreateReviewDto reviewDto) {
@@ -44,7 +42,7 @@ public class ReviewService {
     public void deleteById(Integer id) {
         Optional<Review> optional = reviewRepository.findById(id);
         if (optional.isEmpty()) {
-            throw new NoSuchElementException("review not found with id: " + id);
+            throw new EntityNotFoundException("review not found with id: " + id);
         }
         reviewRepository.deleteById(id);
     }
@@ -57,7 +55,10 @@ public class ReviewService {
         String name = parts[0];
         String surname = parts[1];
         User user = userRepository.findByNameAndSurname(name, surname).orElseThrow();
-        Review review = reviewRepository.findByUser_EmailAndMovie_Title(user.getEmail(), reviewDto.getTitle()).orElseThrow();
+        Review review = reviewRepository.
+                findByUser_EmailAndMovie_Title(user.getEmail(), reviewDto.getTitle()).
+                orElseThrow(() ->
+                        new EntityNotFoundException("review with this users email and movie's title does not exist"));
         return reviewMapper.toDto(reviewRepository.save(review));
     }
 
@@ -66,7 +67,8 @@ public class ReviewService {
         return reviewRepository
                 .findById(id)
                 .map(reviewMapper::toDto)
-                .orElseThrow();
+                .orElseThrow(() ->
+                        new EntityNotFoundException("review with this id does not exist"));
     }
 
     @Transactional(readOnly = true)

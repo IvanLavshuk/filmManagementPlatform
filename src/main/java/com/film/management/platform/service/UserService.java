@@ -7,24 +7,22 @@ import com.film.management.platform.mapper.ReviewMapper;
 import com.film.management.platform.mapper.RoleMapper;
 import com.film.management.platform.mapper.UserMapper;
 import com.film.management.platform.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.NoSuchElementException;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private RoleMapper roleMapper;
-    private ReviewMapper reviewMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final RoleMapper roleMapper;
+    private final ReviewMapper reviewMapper;
 
     @Transactional
     public User create(CreateUserDto userDto) {
@@ -49,7 +47,7 @@ public class UserService {
         return userRepository
                 .findById(id)
                 .map(user -> userMapper.toDto(user, roleMapper, reviewMapper))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("User with this id is not exist"));
     }
 
     @Transactional(readOnly = true)
@@ -57,7 +55,7 @@ public class UserService {
         return userRepository
                 .findByEmail(email)
                 .map(user -> userMapper.toDto(user, roleMapper, reviewMapper))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("User with this email is not exist"));
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +63,7 @@ public class UserService {
         return userRepository
                 .findByNameAndSurname(name, surname)
                 .map(user -> userMapper.toDto(user, roleMapper, reviewMapper))
-                .orElseThrow();
+                .orElseThrow(() -> new EntityNotFoundException("User with this name and surname is not exist"));
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +79,7 @@ public class UserService {
     public void deleteById(Integer id) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isEmpty()) {
-            throw new NoSuchElementException("user not found with id: " + id);
+            throw new EntityNotFoundException("User with id is not exist");
         }
         userRepository.deleteById(id);
     }
@@ -89,7 +87,8 @@ public class UserService {
     @Transactional
     public ResponseUserDto update(CreateUserDto userDto) {
         String email = userDto.getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow();
+        User user = userRepository.findByEmail(email).
+                orElseThrow(() -> new EntityNotFoundException("User with this email is not exist"));
         return userMapper.toDto(userRepository.save(user), roleMapper, reviewMapper);
     }
 }

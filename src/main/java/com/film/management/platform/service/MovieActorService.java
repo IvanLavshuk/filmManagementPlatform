@@ -1,6 +1,7 @@
 package com.film.management.platform.service;
 
 import com.film.management.platform.dto.Request.CreateMovieActorDto;
+import com.film.management.platform.dto.Response.ResponseMovieDto;
 import com.film.management.platform.dto.Short.ActorRoleDto;
 import com.film.management.platform.dto.Short.MovieRoleDto;
 import com.film.management.platform.entity.Movie;
@@ -9,6 +10,8 @@ import com.film.management.platform.mapper.MovieActorMapper;
 import com.film.management.platform.repository.ActorRepository;
 import com.film.management.platform.repository.MovieActorRepository;
 import com.film.management.platform.repository.MovieRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +23,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class MovieActorService {
-    private MovieActorMapper movieActorMapper;
-    private MovieActorRepository movieActorRepository;
-    private MovieRepository movieRepository;
-    private ActorRepository actorRepository;
+    private final MovieActorMapper movieActorMapper;
+    private final MovieActorRepository movieActorRepository;
+    private final MovieRepository movieRepository;
+    private final ActorRepository actorRepository;
     @Transactional
     public MovieActor create(CreateMovieActorDto dto){
         Optional<MovieActor> optional = movieActorRepository.findByMovie_IdAndActor_Id(dto.getIdMovie(),dto.getIdActor());
@@ -51,6 +53,7 @@ public class MovieActorService {
                 .map(movieActorMapper::toActorRoleDto)
                 .collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public List<ActorRoleDto> findByTitle(String title){
         return movieActorRepository
@@ -78,18 +81,20 @@ public class MovieActorService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<MovieRoleDto> findByActorIdOrderByMovieReleaseDateDesc(Integer id){
-        return movieActorRepository
-                .findByActor_IdOrderByMovie_ReleaseDateDesc(id)
-                .stream()
-                .map(movieActorMapper::toMovieRoleDto)
-                .collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    public List<MovieRoleDto> findByActorIdOrderByMovieReleaseDateDesc(Integer id){
+//        return movieActorRepository
+//                .findByActor_IdOrderByMovie_ReleaseDateDesc(id)
+//                .stream()
+//                .map(movieActorMapper::toMovieRoleDto)
+//                .collect(Collectors.toList());
+//    }
+
 
 
     @Transactional(readOnly = true)
     public boolean checkByMovieIdAndActorId(Integer mId,Integer aid){
         return movieActorRepository.findByMovie_IdAndActor_Id(mId,aid).isPresent();
     }
+
 }

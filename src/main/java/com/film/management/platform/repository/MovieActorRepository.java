@@ -13,6 +13,6 @@ public interface MovieActorRepository extends JpaRepository<MovieActor,Integer> 
     List<MovieActor> findByActor_Id(Integer actorId);
     List<MovieActor> findByActor_Role(String role);
     Optional<MovieActor> findByMovie_IdAndActor_Id(Integer movieId, Integer actorId);
-    List<MovieActor> findByActor_IdOrderByMovie_ReleaseDateDesc(Integer actorId);
+    //List<MovieActor> findByActor_IdOrderByMovie_ReleaseDateDesc(Integer actorId);
 
 }
