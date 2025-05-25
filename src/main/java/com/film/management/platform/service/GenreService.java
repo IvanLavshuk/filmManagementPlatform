@@ -6,7 +6,6 @@ import com.film.management.platform.entity.Genre;
 import com.film.management.platform.mapper.GenreMapper;
 import com.film.management.platform.repository.GenreRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +15,12 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+
 @Service
 @RequiredArgsConstructor
 public class GenreService {
-    private GenreRepository genreRepository;
-    private GenreMapper genreMapper;
+    private final GenreRepository genreRepository;
+    private final GenreMapper genreMapper;
 
     @Transactional
     public Genre create(CreateGenreDto genreDto) {

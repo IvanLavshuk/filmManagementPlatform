@@ -26,7 +26,7 @@ public class User {
     @Column(name = "url_avatar", length = 45)
     private String avatarUrl;
     @Column(name = "password", nullable = false, length = 45)
-    private char[] password;
+    private String password;
     @Column(name = "email", length = 45)
     private String email;
     @ManyToOne

@@ -3,12 +3,10 @@ package com.film.management.platform.service;
 
 import com.film.management.platform.dto.Request.CreateRoleDto;
 import com.film.management.platform.dto.Response.ResponseRoleDto;
-import com.film.management.platform.entity.Genre;
 import com.film.management.platform.entity.Role;
 import com.film.management.platform.mapper.RoleMapper;
 import com.film.management.platform.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +17,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@AllArgsConstructor
 public class RoleService {
-    private RoleRepository roleRepository;
-    private RoleMapper roleMapper;
+    private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
     @Transactional
     public Role create(CreateRoleDto roleDto) {

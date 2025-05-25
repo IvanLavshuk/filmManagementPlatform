@@ -9,8 +9,11 @@ import com.film.management.platform.mapper.UserMapper;
 import com.film.management.platform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 import java.util.List;
 
 import java.util.Optional;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
     private final ReviewMapper reviewMapper;
@@ -90,5 +94,15 @@ public class UserService {
         User user = userRepository.findByEmail(email).
                 orElseThrow(() -> new EntityNotFoundException("User with this email is not exist"));
         return userMapper.toDto(userRepository.save(user), roleMapper, reviewMapper);
+    }
+
+    public void authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        if (!password.equals(user.getPassword())){
+            throw new IllegalArgumentException("Неверный пароль");
+        }
+
     }
 }

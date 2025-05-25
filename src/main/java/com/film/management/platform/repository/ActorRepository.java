@@ -11,6 +11,6 @@ public interface ActorRepository extends JpaRepository<Actor,Integer> {
     List<Actor> findByNameContainingIgnoreCase(String name);
     List<Actor> findBySurnameContainingIgnoreCase(String surname);
     List<Actor> findByBirthdateBefore(LocalDate date);
-    List<Actor> findByMovieActors_Movie_TitleAndMovieActors_Movie_LocalDate(String title, LocalDate localDate);
+
     Optional<Actor> findByNameContainingIgnoreCaseAndSurnameContainingIgnoreCase(String name, String surname);
 }

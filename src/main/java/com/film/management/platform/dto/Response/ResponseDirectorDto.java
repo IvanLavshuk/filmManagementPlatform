@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseDirectorDto {
+    private Integer id;
     private String name;
     private String surname;
     private LocalDate birthdate;

@@ -18,6 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review,Integer> {
     Double findAverageRatingByMovieId(@Param("movieId") Integer movieId);
     List<Review> findByRatingGreaterThanEqual(double rating);
     List<Review> findByRatingLessThanEqual(double rating);
-    List<Review> findByCommentContainingIgnoreCase(String keyword);
+    List<Review> findByTextContainingIgnoreCase(String keyword);
     boolean existsByUser_Email(String email);
 }

@@ -27,6 +27,9 @@ public class ReviewService {
 
     @Transactional
     public Review create(CreateReviewDto reviewDto) {
+        if(reviewDto==null){
+            throw new IllegalStateException("CreateReviewDTO from this User is null" );
+        }
         String userFullName = reviewDto.getUserFullName();
         String[] parts = userFullName.split(" ");
         String name = parts[0];
@@ -137,7 +140,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ResponseReviewDto> findAllByComment(String text) {
         return reviewRepository
-                .findByCommentContainingIgnoreCase(text)
+                .findByTextContainingIgnoreCase(text)
                 .stream()
                 .map(reviewMapper::toDto)
                 .collect(Collectors.toList());

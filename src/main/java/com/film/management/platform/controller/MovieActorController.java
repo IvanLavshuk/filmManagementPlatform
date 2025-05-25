@@ -18,6 +18,12 @@ import java.util.List;
 @RequestMapping("/movies-actors")
 public class MovieActorController {
     private final MovieActorService movieActorService;
+
+    @GetMapping("/actor-id/{id}")
+    public ResponseEntity<List<MovieRoleDto>> findByActorId(@PathVariable Integer id) {
+        List<MovieRoleDto> dto = movieActorService.findByActorId(id);
+        return ResponseEntity.ok(dto);
+    }
     @PostMapping("/create")
     public ResponseEntity<Void> create(@RequestBody CreateMovieActorDto dto) {
         movieActorService.create(dto);
@@ -28,17 +34,13 @@ public class MovieActorController {
         movieActorService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/movie-id")
+    @GetMapping("/movie-id/{id}")
     public ResponseEntity<List<ActorRoleDto>> findByMovieId(@PathVariable Integer id) {
         List<ActorRoleDto> dto = movieActorService.findByMovieId(id);
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/actor-id")
-    public ResponseEntity<List<MovieRoleDto>> findByActorId(@PathVariable Integer id) {
-        List<MovieRoleDto> dto = movieActorService.findByActorId(id);
-        return ResponseEntity.ok(dto);
-    }
+
 
     @GetMapping("/title")
     public ResponseEntity<List<ActorRoleDto>> findByTitle(@RequestParam String title){
@@ -46,11 +48,6 @@ public class MovieActorController {
         return ResponseEntity.ok(movies);
     }
 
-    @GetMapping("/role")
-    public ResponseEntity<List<MovieRoleDto>> findByRole(@RequestParam String role){
-        List<MovieRoleDto> movies = movieActorService.findByActorRole(role);
-        return ResponseEntity.ok(movies);
-    }
 
 
 }

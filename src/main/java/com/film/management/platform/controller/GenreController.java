@@ -17,6 +17,11 @@ import java.util.List;
 @RequestMapping("/genres")
 public class GenreController {
     private final GenreService genreService;
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseGenreDto> findById(@PathVariable Integer id) {
+        ResponseGenreDto dto = genreService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
     @PostMapping("/create")
     public ResponseEntity<ResponseGenreDto> create(@RequestBody CreateGenreDto dto) {
         Genre genre = genreService.create(dto);
@@ -30,11 +35,7 @@ public class GenreController {
         return ResponseEntity.ok(genres);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseGenreDto> findById(@PathVariable Integer id) {
-        ResponseGenreDto dto = genreService.findById(id);
-        return ResponseEntity.ok(dto);
-    }
+
 
     @PutMapping
     public ResponseEntity<ResponseGenreDto> update(@RequestBody CreateGenreDto dto){

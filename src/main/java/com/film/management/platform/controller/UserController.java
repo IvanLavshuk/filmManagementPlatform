@@ -2,21 +2,34 @@ package com.film.management.platform.controller;
 
 import com.film.management.platform.dto.Request.CreateUserDto;
 import com.film.management.platform.dto.Response.ResponseUserDto;
+import com.film.management.platform.dto.Short.LoginDto;
 import com.film.management.platform.entity.User;
 import com.film.management.platform.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDto login) {
+        try {
+            log.info("loginDto: {}", login);
+            userService.authenticate(login.getEmail(), login.getPassword());
+            return ResponseEntity.ok("Success!"); // Возврат сообщения при успешном входе
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // Возврат ошибки
+        }
+    }
     @PostMapping("/create")
     public ResponseEntity<ResponseUserDto> create(@RequestBody CreateUserDto dto) {
         User user = userService.create(dto);
@@ -65,8 +78,4 @@ public class UserController {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
 }

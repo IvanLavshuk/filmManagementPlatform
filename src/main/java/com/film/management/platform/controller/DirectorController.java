@@ -19,6 +19,12 @@ import java.util.List;
 @RequestMapping("/directors")
 public class DirectorController {
     private final DirectorService directorService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDirectorDto> findById(@PathVariable Integer id) {
+        ResponseDirectorDto dto = directorService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
     @PostMapping("/create")
     public ResponseEntity<ResponseDirectorDto> create(@RequestBody CreateDirectorDto dto) {
         Director director = directorService.create(dto);
@@ -33,11 +39,7 @@ public class DirectorController {
     }
 
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDirectorDto> findById(@PathVariable Integer id) {
-        ResponseDirectorDto dto = directorService.findById(id);
-        return ResponseEntity.ok(dto);
-    }
+
     @GetMapping("/surname")
     public ResponseEntity<List<ResponseDirectorDto>> findBySurname(@RequestParam String surname){
         List<ResponseDirectorDto> directors = directorService.findAllWithSurname(surname);

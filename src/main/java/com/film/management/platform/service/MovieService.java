@@ -97,7 +97,14 @@ public class MovieService {
                 .map(movie -> movieMapper.toDto(movie))
                 .orElseThrow(() -> new EntityNotFoundException("Movie with this id does not exists"));
     }
-
+    @Transactional(readOnly = true)
+    public List<ResponseMovieDto> findByDirectorId(Integer id) {
+        return movieRepository
+                .findByDirectors_Id(id)
+                .stream()
+                .map(movie -> movieMapper.toDto(movie))
+                .collect(Collectors.toList());
+    }
     @Transactional(readOnly = true)
     public List<ResponseMovieDto> findByTitle(String title) {
         return movieRepository

@@ -1,18 +1,13 @@
 package com.film.management.platform.service;
 
 import com.film.management.platform.dto.Request.CreateMovieActorDto;
-import com.film.management.platform.dto.Response.ResponseMovieDto;
 import com.film.management.platform.dto.Short.ActorRoleDto;
 import com.film.management.platform.dto.Short.MovieRoleDto;
-import com.film.management.platform.entity.Movie;
 import com.film.management.platform.entity.MovieActor;
 import com.film.management.platform.mapper.MovieActorMapper;
 import com.film.management.platform.repository.ActorRepository;
 import com.film.management.platform.repository.MovieActorRepository;
 import com.film.management.platform.repository.MovieRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,14 +67,7 @@ public class MovieActorService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<MovieRoleDto> findByActorRole(String role){
-        return movieActorRepository
-                .findByActor_Role(role)
-                .stream()
-                .map(movieActorMapper::toMovieRoleDto)
-                .collect(Collectors.toList());
-    }
+
 
 //    @Transactional(readOnly = true)
 //    public List<MovieRoleDto> findByActorIdOrderByMovieReleaseDateDesc(Integer id){

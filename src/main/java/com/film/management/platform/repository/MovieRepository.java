@@ -1,7 +1,6 @@
 package com.film.management.platform.repository;
 
 import com.film.management.platform.entity.Movie;
-import com.film.management.platform.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,6 +15,7 @@ public interface MovieRepository extends JpaRepository<Movie,Integer> {
     List<Movie> findByCountryIgnoreCase(String country);
     List<Movie> findByGenres_NameIgnoreCase(String name);
     List<Movie> findByDirectors_NameIgnoreCaseAndDirectors_SurnameIgnoreCase(String name, String surname);
+    List<Movie> findByDirectors_Id(Integer id);
     List<Movie> findByReleaseDateBetween(LocalDate start, LocalDate end);
     @Query("""
         SELECT m FROM Movie m

@@ -6,7 +6,6 @@ import com.film.management.platform.entity.Actor;
 import com.film.management.platform.mapper.ActorMapper;
 import com.film.management.platform.repository.ActorRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,14 +78,6 @@ public class ActorService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<ResponseActorDto> findAllByTitleAndDate(String title, LocalDate localDate){
-         return actorRepository
-                 .findByMovieActors_Movie_TitleAndMovieActors_Movie_LocalDate(title,localDate)
-                 .stream()
-                 .map(actorMapper::toDto)
-                 .collect(Collectors.toList());
-    }
 
     @Transactional
     public ResponseActorDto update(CreateActorDto actorDto) {

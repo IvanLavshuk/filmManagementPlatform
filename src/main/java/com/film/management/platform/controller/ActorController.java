@@ -59,12 +59,6 @@ public class ActorController {
         return ResponseEntity.ok(actors);
     }
 
-    @GetMapping("/movie-parameters")
-    public ResponseEntity<List<ResponseActorDto>> findByTitleAndDate(
-            @RequestParam String title, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        List<ResponseActorDto> actors = actorService.findAllByTitleAndDate(title,date);
-        return ResponseEntity.ok(actors);
-    }
 
     @PutMapping
     public ResponseEntity<ResponseActorDto> update(@RequestBody CreateActorDto dto){

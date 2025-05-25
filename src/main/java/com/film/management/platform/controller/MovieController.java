@@ -19,12 +19,25 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
     private final MovieService movieService;
+    @GetMapping("/genre")
+    public ResponseEntity<List<ResponseMovieDto>> findByGenre(@RequestParam String genre){
+        List<ResponseMovieDto> movies = movieService.findByGenre(genre);
+        return ResponseEntity.ok(movies);
+    }
+    @GetMapping("/director/{id}")
+    public ResponseEntity<List<ResponseMovieDto>> findByDirectorId(@PathVariable Integer id){
+        List<ResponseMovieDto> movies = movieService.findByDirectorId(id);
+        return ResponseEntity.ok(movies);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<ResponseMovieDto> create(@RequestBody CreateMovieDto dto) {
         Movie movie = movieService.create(dto);
         ResponseMovieDto movieDto = movieService.findById(movie.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(movieDto);
     }
+
+
 
     @GetMapping("/all")
     public ResponseEntity<List<ResponseMovieDto>> findAll() {
@@ -62,17 +75,13 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
-    @GetMapping("/genre")
-    public ResponseEntity<List<ResponseMovieDto>> findByGenre(@RequestParam String genre){
-        List<ResponseMovieDto> movies = movieService.findByGenre(genre);
-        return ResponseEntity.ok(movies);
-    }
 
     @GetMapping("/director")
     public ResponseEntity<List<ResponseMovieDto>> findByDirector(@RequestParam String name, @RequestParam String surname){
         List<ResponseMovieDto> movies = movieService.findByDirector(name,surname);
         return ResponseEntity.ok(movies);
     }
+
 
     @GetMapping("/date-between")
     public ResponseEntity<List<ResponseMovieDto>> deleteByTitleAndDate(

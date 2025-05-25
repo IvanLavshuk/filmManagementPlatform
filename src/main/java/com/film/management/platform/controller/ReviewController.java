@@ -52,13 +52,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("/movie-id")
+    @GetMapping("/movie-id/{id}")
     public ResponseEntity<List<ResponseReviewDto>> findByMovieId(@PathVariable Integer id){
         List<ResponseReviewDto> reviews = reviewService.findAllMovieId(id);
         return ResponseEntity.ok(reviews);
     }
 
-    @GetMapping("/user-id")
+    @GetMapping("/user-id/{id}")
     public ResponseEntity<List<ResponseReviewDto>> findByUserId(@PathVariable Integer id){
         List<ResponseReviewDto> reviews = reviewService.findAllUserId(id);
         return ResponseEntity.ok(reviews);

@@ -6,7 +6,6 @@ import com.film.management.platform.entity.Director;
 import com.film.management.platform.mapper.DirectorMapper;
 import com.film.management.platform.repository.DirectorRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

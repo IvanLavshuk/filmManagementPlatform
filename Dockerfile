@@ -10,7 +10,7 @@ WORKDIR /app
 COPY build/libs/shop-0.0.1-SNAPSHOT.jar app.jar
 
 # Открываем порт, который слушает Spring Boot
-EXPOSE 8080
+EXPOSE 8081
 
 # Запуск приложения
 ENTRYPOINT ["java", "-jar", "app.jar"]
