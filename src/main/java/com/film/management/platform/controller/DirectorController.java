@@ -20,11 +20,37 @@ import java.util.List;
 public class DirectorController {
     private final DirectorService directorService;
 
+    @GetMapping("/surname")
+    public ResponseEntity<List<ResponseDirectorDto>> findBySurname(@RequestParam String surname) {
+        List<ResponseDirectorDto> directors = directorService.findAllWithSurname(surname);
+        return ResponseEntity.ok(directors);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<List<ResponseDirectorDto>> findByName(@RequestParam String name) {
+        List<ResponseDirectorDto> directors = directorService.findAllWithName(name);
+        return ResponseEntity.ok(directors);
+    }
+
+    @GetMapping("/birthdate-before")
+    public ResponseEntity<List<ResponseDirectorDto>> findBeforeDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<ResponseDirectorDto> directors = directorService.findAllByBirthdateBefore(date);
+        return ResponseEntity.ok(directors);
+    }
+
+    @GetMapping("/country")
+    public ResponseEntity<List<ResponseDirectorDto>> findByMovieCountry(@RequestParam String country) {
+        List<ResponseDirectorDto> directors = directorService.findAllWithMoviesCountry(country);
+        return ResponseEntity.ok(directors);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDirectorDto> findById(@PathVariable Integer id) {
         ResponseDirectorDto dto = directorService.findById(id);
         return ResponseEntity.ok(dto);
     }
+
     @PostMapping("/create")
     public ResponseEntity<ResponseDirectorDto> create(@RequestBody CreateDirectorDto dto) {
         Director director = directorService.create(dto);
@@ -39,39 +65,13 @@ public class DirectorController {
     }
 
 
-
-    @GetMapping("/surname")
-    public ResponseEntity<List<ResponseDirectorDto>> findBySurname(@RequestParam String surname){
-        List<ResponseDirectorDto> directors = directorService.findAllWithSurname(surname);
-        return ResponseEntity.ok(directors);
-    }
-
-    @GetMapping("/name")
-    public ResponseEntity<List<ResponseDirectorDto>> findByName(@RequestParam String name){
-        List<ResponseDirectorDto> directors = directorService.findAllWithName(name);
-        return ResponseEntity.ok(directors);
-    }
-
-    @GetMapping("/birthdate-before")
-    public ResponseEntity<List<ResponseDirectorDto>> findBeforeDate(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        List<ResponseDirectorDto> directors = directorService.findAllByBirthdateBefore(date);
-        return ResponseEntity.ok(directors);
-    }
-
-    @GetMapping("/country")
-    public ResponseEntity<List<ResponseDirectorDto>> findByMovieCountry(@RequestParam String coutry){
-        List<ResponseDirectorDto> directors = directorService.findAllWithMoviesCountry(coutry);
-        return ResponseEntity.ok(directors);
-    }
-
     @PutMapping
-    public ResponseEntity<ResponseDirectorDto> update(@RequestBody CreateDirectorDto dto){
+    public ResponseEntity<ResponseDirectorDto> update(@RequestBody CreateDirectorDto dto) {
         return ResponseEntity.ok(directorService.update(dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         directorService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

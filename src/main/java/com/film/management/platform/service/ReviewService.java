@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,10 +35,13 @@ public class ReviewService {
         String[] parts = userFullName.split(" ");
         String name = parts[0];
         String surname = parts[1];
-        if (userRepository.findByNameAndSurname(name, surname).isPresent()) {
-            throw new IllegalStateException("Review from this User already exists" + (userFullName));
+        String rev = reviewDto.getTitle();
+
+        if (reviewRepository.findByUser_NameAndUser_SurnameAndMovie_Title(name, surname,rev).isPresent()) {
+            throw new IllegalStateException("Review from this User already exists " + (userFullName));
         }
         Review review = reviewMapper.toEntity(reviewDto, userRepository, movieRepository);
+        review.setDate(LocalDate.now());
         return reviewRepository.save(review);
     }
 

@@ -1,0 +1,35 @@
+/* MoviesFilter.css */
+
+.movies-filter {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.movies-filter input[type="text"],
+.movies-filter select {
+    padding: 8px 12px;
+    font-size: 15px;
+    border: 1.8px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    min-width: 150px;
+    max-width: 220px;
+}
+
+.movies-filter input[type="text"]:focus,
+.movies-filter select:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 8px #4a90e2;
+}
+
+.movies-filter select {
+    height: 38px;
+    cursor: pointer;
+    background-color: white;
+}

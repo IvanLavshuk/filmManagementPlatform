@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-
+import { useNavigate,useParams, Link } from "react-router-dom";
+import "./actor.css"
 export default function ActorDetailsPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [actor, setActor] = useState(null);
     const [roles, setRoles] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,32 +40,41 @@ export default function ActorDetailsPage() {
     if (!actor) return <p>Актёр не найден</p>;
 
     return (
-        <div style={{ display: "flex", gap: 32, margin: 32 }}>
-            <div style={{ flex: 1 }}>
-                <img
-                    src={actor.photoUrl}
-                    alt={`${actor.name} ${actor.surname}`}
-                    style={{ maxWidth: 250, borderRadius: 8, border: "1px solid #ccc" }}
-                />
+        <div className="actor-details-container">
+            <div className="actor-navigation">
+                <button onClick={() => navigate(-1)}>Назад</button>
+                <Link to="/home">
+                    <button>Главная</button>
+                </Link>
             </div>
-            <div style={{ flex: 2 }}>
-                <h2>{actor.name} {actor.surname}</h2>
-                <p><strong>Дата рождения:</strong> {new Date(actor.birthdate).toLocaleDateString()}</p>
 
-                <h3>Роли в фильмах</h3>
-                {roles.length === 0 ? (
-                    <p>Роли не найдены</p>
-                ) : (
-                    <ul>
-                        {roles.map(role => (
-                            <li key={role.idMovie}>
-                                <Link to={`/movies-actors/${role.idMovie}`}>
-                                    {role.title}
-                                </Link> — роль: {role.role}
-                            </li>
-                        ))}
-                    </ul>
-                )}
+            <div className="actor-content">
+                <div className="actor-photo">
+                    <img
+                        src={actor.photoUrl}
+                        alt={`${actor.name} ${actor.surname}`}
+                    />
+                </div>
+
+                <div className="actor-info">
+                    <h2>{actor.name} {actor.surname}</h2>
+                    <p><strong>Дата рождения:</strong> {new Date(actor.birthdate).toLocaleDateString()}</p>
+
+                    <h3>Роли в фильмах</h3>
+                    {roles.length === 0 ? (
+                        <p>Роли не найдены</p>
+                    ) : (
+                        <ul className="actor-roles-list">
+                            {roles.map(role => (
+                                <li key={role.idMovie}>
+                                    <Link to={`/movies/${role.idMovie}`}>
+                                        {role.title}
+                                    </Link> — роль: {role.role}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </div>
         </div>
     );

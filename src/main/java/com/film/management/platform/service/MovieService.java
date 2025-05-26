@@ -23,13 +23,10 @@ public class MovieService {
     private final ActorRepository actorRepository;
     private final DirectorRepository directorRepository;
     private final GenreRepository genreRepository;
-    private final ReviewRepository reviewRepository;
+
     private final MovieMapper movieMapper;
     private final MovieActorMapper movieActorMapper;
 
-    public Double getAverageRating(Integer movieId) {
-        return reviewRepository.findAverageRatingByMovieId(movieId);
-    }
 
     @Transactional
     public Movie create(CreateMovieDto movieDto) {
@@ -81,14 +78,6 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<ResponseMovieDto> findByMovieAndDate(String title, LocalDate releaseDate) {
-        return movieRepository
-                .findByTitleAndReleaseDate(title, releaseDate)
-                .stream()
-                .map(movie -> movieMapper.toDto(movie))
-                .collect(Collectors.toList());
-    }
 
     @Transactional(readOnly = true)
     public ResponseMovieDto findById(Integer id) {
@@ -114,14 +103,6 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<ResponseMovieDto> findByPrefix(String title) {
-        return movieRepository
-                .findByTitleStartingWith(title)
-                .stream()
-                .map(movie -> movieMapper.toDto(movie))
-                .collect(Collectors.toList());
-    }
 
     @Transactional(readOnly = true)
     public List<ResponseMovieDto> findByCountry(String country) {
@@ -150,14 +131,6 @@ public class MovieService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<ResponseMovieDto> findByDateBetween(LocalDate start, LocalDate end) {
-        return movieRepository
-                .findByReleaseDateBetween(start, end)
-                .stream()
-                .map(movie -> movieMapper.toDto(movie))
-                .collect(Collectors.toList());
-    }
 
     @Transactional(readOnly = true)
     public List<ResponseMovieDto> findAllByOrderByDateDesc() {

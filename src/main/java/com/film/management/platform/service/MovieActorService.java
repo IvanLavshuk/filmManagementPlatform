@@ -68,18 +68,6 @@ public class MovieActorService {
     }
 
 
-
-//    @Transactional(readOnly = true)
-//    public List<MovieRoleDto> findByActorIdOrderByMovieReleaseDateDesc(Integer id){
-//        return movieActorRepository
-//                .findByActor_IdOrderByMovie_ReleaseDateDesc(id)
-//                .stream()
-//                .map(movieActorMapper::toMovieRoleDto)
-//                .collect(Collectors.toList());
-//    }
-
-
-
     @Transactional(readOnly = true)
     public boolean checkByMovieIdAndActorId(Integer mId,Integer aid){
         return movieActorRepository.findByMovie_IdAndActor_Id(mId,aid).isPresent();

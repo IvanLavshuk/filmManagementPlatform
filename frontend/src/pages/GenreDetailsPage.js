@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
-
+import {useNavigate, useParams, Link } from "react-router-dom";
+import "./genre.css"
 export default function GenreDetailsPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [genre, setGenre] = useState(null);
     const [movies, setMovies] = useState([]);
     const [loadingGenre, setLoadingGenre] = useState(true);
@@ -11,7 +12,6 @@ export default function GenreDetailsPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Получаем данные жанра (название)
         axios.get(`http://localhost:8082/genres/${id}`)
             .then(res => {
                 setGenre(res.data);
@@ -22,9 +22,6 @@ export default function GenreDetailsPage() {
                 setError("Ошибка при загрузке жанра");
                 setLoadingGenre(false);
             });
-
-        // Получаем фильмы по названию жанра из жанра
-        // Жанр уже может быть не загружен, поэтому используем async функцию
     }, [id]);
 
     useEffect(() => {
@@ -49,13 +46,19 @@ export default function GenreDetailsPage() {
     if (!genre) return <p>Жанр не найден</p>;
 
     return (
-        <div style={{ margin: 32 }}>
-            <h2>Жанр: {genre.name}</h2>
+        <div className="genre-details-container">
+            <div className="genre-navigation">
+                <button onClick={() => navigate(-1)}>Назад</button>
+                <Link to="/home">
+                    <button>Главная</button>
+                </Link>
+            </div>
+            <h2 className="genre-title">Жанр: {genre.name}</h2>
 
             {movies.length === 0 ? (
-                <p>Фильмы не найдены</p>
+                <p className="genre-no-movies">Фильмы не найдены</p>
             ) : (
-                <ul>
+                <ul className="genre-movies-list">
                     {movies.map(movie => (
                         <li key={movie.id}>
                             <Link to={`/movies/${movie.id}`}>

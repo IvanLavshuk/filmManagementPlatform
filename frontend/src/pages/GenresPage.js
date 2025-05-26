@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import "./genres.css"
 export default function GenresPage() {
     const [genres, setGenres] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,9 +23,14 @@ export default function GenresPage() {
     if (error) return <p>{error}</p>;
 
     return (
-        <div>
-            <h2>Список жанров</h2>
-            <ul>
+        <div className="genres-container">
+            <div className="genres-back">
+                <Link to="/home">
+                    <button>Главная</button>
+                </Link>
+            </div>
+            <h2 className="genres-title">Список жанров</h2>
+            <ul className="genres-list">
                 {genres.map(genre => (
                     <li key={genre.id}>
                         <Link to={`/genres/${genre.id}`}>

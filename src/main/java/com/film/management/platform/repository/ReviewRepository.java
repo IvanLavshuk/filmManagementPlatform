@@ -12,6 +12,7 @@ public interface ReviewRepository extends JpaRepository<Review,Integer> {
     List<Review> findByMovie_Id(Integer movieId);
     List<Review> findByUser_Id(Integer UserId);
     List<Review> findByUser_Email(String userEmail);
+    Optional<Review> findByUser_NameAndUser_SurnameAndMovie_Title(String name, String surname,String title);
     List<Review> findByMovie_Title(String title);
     Optional<Review> findByUser_EmailAndMovie_Title(String email, String title);
     @Query("SELECT AVG(r.rating) FROM Review r WHERE r.movie.id = :movieId")

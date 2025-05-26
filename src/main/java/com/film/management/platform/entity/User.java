@@ -25,7 +25,7 @@ public class User {
     private String surname;
     @Column(name = "url_avatar", length = 45)
     private String avatarUrl;
-    @Column(name = "password", nullable = false, length = 45)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
     @Column(name = "email", length = 45)
     private String email;

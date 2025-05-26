@@ -17,6 +17,11 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
+
+    @PutMapping
+    public ResponseEntity<ResponseReviewDto> update(@RequestBody CreateReviewDto dto){
+        return ResponseEntity.ok(reviewService.update(dto));
+    }
     @PostMapping("/create")
     public ResponseEntity<ResponseReviewDto> create(@RequestBody CreateReviewDto dto) {
         Review review = reviewService.create(dto);
@@ -77,10 +82,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PutMapping
-    public ResponseEntity<ResponseReviewDto> update(@RequestBody CreateReviewDto dto){
-        return ResponseEntity.ok(reviewService.update(dto));
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id){

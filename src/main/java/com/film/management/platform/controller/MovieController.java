@@ -19,6 +19,41 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
     private final MovieService movieService;
+    @GetMapping("/country")
+    public ResponseEntity<List<ResponseMovieDto>> findByCountry(@RequestParam String country){
+        List<ResponseMovieDto> movies = movieService.findByCountry(country);
+        return ResponseEntity.ok(movies);
+    }
+    @GetMapping("/order-rating-desc")
+    public ResponseEntity<List<ResponseMovieDto>> findByOrderRatingDesc() {
+        List<ResponseMovieDto> movies = movieService.findAllOrderByAverageRatingDesc();
+        return ResponseEntity.ok(movies);
+    }
+
+    @GetMapping("/director")
+    public ResponseEntity<List<ResponseMovieDto>> findByDirector(@RequestParam String name, @RequestParam String surname){
+        List<ResponseMovieDto> movies = movieService.findByDirector(name,surname);
+        return ResponseEntity.ok(movies);
+    }
+
+
+    @GetMapping("/order-date-desc")
+    public ResponseEntity<List<ResponseMovieDto>> findByOrderDateDesc() {
+        List<ResponseMovieDto> movies = movieService.findAllByOrderByDateDesc();
+        return ResponseEntity.ok(movies);
+    }
+    @GetMapping("/order-date-asc")
+    public ResponseEntity<List<ResponseMovieDto>> findByOrderDateAsc() {
+        List<ResponseMovieDto> movies = movieService.findAllByOrderByDateAsc();
+        return ResponseEntity.ok(movies);
+    }
+
+
+    @GetMapping("/title")
+    public ResponseEntity<List<ResponseMovieDto>> findByTitle(@RequestParam String title){
+        List<ResponseMovieDto> movies = movieService.findByTitle(title);
+        return ResponseEntity.ok(movies);
+    }
     @GetMapping("/genre")
     public ResponseEntity<List<ResponseMovieDto>> findByGenre(@RequestParam String genre){
         List<ResponseMovieDto> movies = movieService.findByGenre(genre);
@@ -50,63 +85,7 @@ public class MovieController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/find-by-movie-parameters")
-    public ResponseEntity<List<ResponseMovieDto>> findByTitleAndDate(
-            @RequestParam String title, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        List<ResponseMovieDto> movies = movieService.findByMovieAndDate(title,date);
-        return ResponseEntity.ok(movies);
-    }
 
-    @GetMapping("/prefix")
-    public ResponseEntity<List<ResponseMovieDto>> findByPrefix(@RequestParam String prefix){
-        List<ResponseMovieDto> movies = movieService.findByPrefix(prefix);
-        return ResponseEntity.ok(movies);
-    }
-
-    @GetMapping("/title")
-    public ResponseEntity<List<ResponseMovieDto>> findByTitle(@RequestParam String title){
-        List<ResponseMovieDto> movies = movieService.findByTitle(title);
-        return ResponseEntity.ok(movies);
-    }
-
-    @GetMapping("/country")
-    public ResponseEntity<List<ResponseMovieDto>> findByCountry(@RequestParam String country){
-        List<ResponseMovieDto> movies = movieService.findByCountry(country);
-        return ResponseEntity.ok(movies);
-    }
-
-
-    @GetMapping("/director")
-    public ResponseEntity<List<ResponseMovieDto>> findByDirector(@RequestParam String name, @RequestParam String surname){
-        List<ResponseMovieDto> movies = movieService.findByDirector(name,surname);
-        return ResponseEntity.ok(movies);
-    }
-
-
-    @GetMapping("/date-between")
-    public ResponseEntity<List<ResponseMovieDto>> deleteByTitleAndDate(
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end){
-        List<ResponseMovieDto> movies = movieService.findByDateBetween(start,end);
-        return ResponseEntity.ok(movies);
-    }
-
-    @GetMapping("/order-date-desc")
-    public ResponseEntity<List<ResponseMovieDto>> findByOrderDateDesc() {
-        List<ResponseMovieDto> movies = movieService.findAllByOrderByDateDesc();
-        return ResponseEntity.ok(movies);
-    }
-    @GetMapping("/order-date-asc")
-    public ResponseEntity<List<ResponseMovieDto>> findByOrderDateAsc() {
-        List<ResponseMovieDto> movies = movieService.findAllByOrderByDateAsc();
-        return ResponseEntity.ok(movies);
-    }
-
-    @GetMapping("/order-rating-desc")
-    public ResponseEntity<List<ResponseMovieDto>> findByOrderRatingDesc() {
-        List<ResponseMovieDto> movies = movieService.findAllOrderByAverageRatingDesc();
-        return ResponseEntity.ok(movies);
-    }
 
 
 

@@ -2,20 +2,20 @@ package com.film.management.platform.service;
 
 import com.film.management.platform.dto.Request.CreateUserDto;
 import com.film.management.platform.dto.Response.ResponseUserDto;
+import com.film.management.platform.entity.Role;
 import com.film.management.platform.entity.User;
 import com.film.management.platform.mapper.ReviewMapper;
 import com.film.management.platform.mapper.RoleMapper;
 import com.film.management.platform.mapper.UserMapper;
+import com.film.management.platform.repository.RoleRepository;
 import com.film.management.platform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
-
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RoleMapper roleMapper;
     private final ReviewMapper reviewMapper;
@@ -34,7 +35,24 @@ public class UserService {
             throw new IllegalStateException("User with this email already exists");
         }
         User user = userMapper.toEntity(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Role role = roleRepository.findById(2).
+                orElseThrow(() -> new EntityNotFoundException("Role with this id not found"));
+        user.setRole(role);
         return userRepository.save(user);
+    }
+
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!password.equals(user.getPassword())) {
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+
+                throw new IllegalArgumentException("Неверный пароль");
+            }
+        }
+
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -96,13 +114,5 @@ public class UserService {
         return userMapper.toDto(userRepository.save(user), roleMapper, reviewMapper);
     }
 
-    public void authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        if (!password.equals(user.getPassword())){
-            throw new IllegalArgumentException("Неверный пароль");
-        }
-
-    }
 }

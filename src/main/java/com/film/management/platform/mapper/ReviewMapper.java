@@ -7,6 +7,7 @@ import com.film.management.platform.entity.Review;
 import com.film.management.platform.entity.User;
 import com.film.management.platform.repository.MovieRepository;
 import com.film.management.platform.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,7 +34,8 @@ public interface ReviewMapper {
 
     @Named("mapNameToMovie")
     default Movie mapNameToMovie(String title, @Context MovieRepository movieRepository) {
-        Movie movie = movieRepository.findByTitle(title).orElseThrow();
+        Movie movie = movieRepository.findByTitle(title)
+                .orElseThrow(() -> new EntityNotFoundException("Movie with this title not found"));
         return movie;
     }
 

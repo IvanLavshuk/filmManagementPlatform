@@ -21,13 +21,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto login) {
+    public ResponseEntity<ResponseUserDto> login(@RequestBody LoginDto login) {
         try {
             log.info("loginDto: {}", login);
-            userService.authenticate(login.getEmail(), login.getPassword());
-            return ResponseEntity.ok("Success!"); // Возврат сообщения при успешном входе
+            User user = userService.authenticate(login.getEmail(), login.getPassword());
+            ResponseUserDto userDto = userService.findById(user.getId());
+            return ResponseEntity.ok(userDto);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage()); // Возврат ошибки
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
     @PostMapping("/create")
